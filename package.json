@@ -17,7 +17,6 @@
     "main": "build/index.js",
     "scripts": {
         "test:unit": "vendor/bin/phpunit -c phpunit.xml",
-        "test:integration": "wp-env run tests-cli --env-cwd=wp-content/plugins/obatala vendor/bin/phpunit -c phpunit-integration.xml",
         "build": "wp-scripts build",
         "format": "wp-scripts format",
         "lint:js": "wp-scripts lint-js",
