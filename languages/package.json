@@ -1,0 +1,48 @@
+{
+    "name": "nocs-obatala",
+    "version": "1.4.0",
+    "private": true,
+    "description": "Curatorial process manager for Tainacan",
+    "author": "Nocs Lab",
+    "license": "MIT",
+    "keywords": [
+        "WordPress",
+        "Tainacan"
+    ],
+    "homepage": "https://github.com/Nocs-lab/Obatala/",
+    "repository": "git+https://github.com/Nocs-lab/Obatala.git",
+    "bugs": {
+        "url": "https://github.com/Nocs-lab/Obatala/issues"
+    },
+    "main": "build/index.js",
+    "scripts": {
+        "test:unit": "vendor/bin/phpunit -c phpunit.xml",
+        "test:integration": "npx @wordpress/env run tests-cli vendor/bin/phpunit -c phpunit-integration.xml",
+        "build": "wp-scripts build",
+        "format": "wp-scripts format",
+        "lint:js": "wp-scripts lint-js",
+        "packages-update": "wp-scripts packages-update",
+        "start": "wp-scripts start",
+        "check-engines": "wp-scripts check-engines"
+    },
+    "devDependencies": {
+        "@wordpress/env": "^11.12.0",
+        "@wordpress/scripts": "^28.4.0",
+        "archiver": "^7.0.1"
+    },
+    "dependencies": {
+        "@dnd-kit/core": "^6.1.0",
+        "@dnd-kit/sortable": "^8.0.0",
+        "@dnd-kit/utilities": "^3.2.2",
+        "@wordpress/core-data": "^7.11.0",
+        "@wordpress/data": "^10.11.0",
+        "@wordpress/icons": "^10.0.0",
+        "@xyflow/react": "^12.2.1",
+        "date-fns": "^3.6.0",
+        "react-beautiful-dnd": "^13.1.1",
+        "react-router-dom": "^6.25.1",
+        "react-table": "^7.8.0",
+        "react-zoom-pan-pinch": "^3.6.1",
+        "yup": "^1.4.0"
+    }
+}

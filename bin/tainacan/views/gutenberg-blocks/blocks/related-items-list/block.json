@@ -1,0 +1,63 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "name": "tainacan/related-items-list",
+    "title": "Tainacan Related Items List",
+    "apiVersion": 3,
+    "category": "tainacan-blocks",
+    "keywords": [ "items", "relationship" ],
+    "description": "A set of lists to display items related to a certain item via relationship metadata.",
+    "textdomain": "tainacan",
+    "example": {
+        "attributes": {
+            "content": "preview"
+        }
+    },
+    "attributes": {
+        "isDynamic": {
+            "type": "boolean",
+            "default": false
+        },
+        "collectionId": {
+            "type": "string",
+            "default": ""
+        },
+        "itemId": {
+            "type": "string",
+            "default": ""
+        },
+        "isModalOpen": {
+            "type": "boolean",
+            "default": false
+        },
+        "relatedItems": {
+            "type": "array",
+            "default": []
+        },
+        "relatedItemsTemplate": {
+            "type": "array",
+            "default": []
+        },
+        "itemsListLayout": {
+            "type": "string",
+            "default": "carousel"
+        },
+        "tainacanViewMode": {
+            "type": "string",
+            "default": "masonry"
+        },
+        "templateMode": {
+            "type": "boolean",
+            "default": false
+        }
+    },
+    "supports": {
+        "align": ["full", "wide"],
+        "html": false,
+        "multiple": true,
+        "position": {
+            "sticky": true
+        }
+    },
+    "editorScript": "related-items-list",
+	"editorStyle": ["related-items-list", "tainacan-blocks-common-editor-styles" ]
+}

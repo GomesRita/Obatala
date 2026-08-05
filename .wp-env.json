@@ -1,0 +1,8 @@
+{
+    "core": null,
+    "plugins": [
+        "./bin/tainacan.zip",
+        "."
+    ],
+    "phpVersion": "8.3"
+}
