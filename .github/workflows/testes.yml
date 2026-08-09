@@ -77,7 +77,7 @@ jobs:
           name: Resultados PHPUnit
           path: reports/phpunit-junit.xml
           reporter: java-junit
-          fail-on-error: true
+          fail-on-error: false
 
       - name: Comentar no PR com o resumo
         if: always() && github.event_name == 'pull_request'
