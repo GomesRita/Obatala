@@ -43,9 +43,6 @@ jobs:
       - name: Criar pasta de relatórios
         run: mkdir -p reports
 
-      - name: Criar pasta de relatórios
-        run: mkdir -p reports
-
       - name: Correr PHPUnit com relatório JUnit + cobertura
         run: |
           vendor/bin/phpunit \

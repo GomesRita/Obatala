@@ -11,6 +11,9 @@ class SectorApiTest extends TestCase
         $registeredRoutes = [];
 
         Functions\stubs([
+            'error_log' => static function (string $message) {
+                return true;
+            },
             'register_rest_route' => function (string $namespace, string $route, array $args) use (&$registeredRoutes) {
                 $registeredRoutes[] = compact('namespace', 'route', 'args');
             },
@@ -27,6 +30,11 @@ class SectorApiTest extends TestCase
 
         $this->assertCount(10, $registeredRoutes);
         $this->assertSame('obatala/v1', $registeredRoutes[0]['namespace']);
+
+        foreach ($registeredRoutes as $route) {
+            $this->assertArrayHasKey('permission_callback', $route['args']);
+            $this->assertSame('__return_true', $route['args']['permission_callback']);
+        }
 
         $routeNames = array_column($registeredRoutes, 'route');
         $this->assertContains('create_sector_obatala', $routeNames);
@@ -46,6 +54,9 @@ class SectorApiTest extends TestCase
         $registeredRoutes = [];
 
         Functions\stubs([
+            'error_log' => static function (string $message) {
+                return true;
+            },
             'register_rest_route' => function (string $namespace, string $route, array $args) use (&$registeredRoutes) {
                 $registeredRoutes[] = compact('namespace', 'route', 'args');
             },
@@ -69,7 +80,11 @@ class SectorApiTest extends TestCase
         $args = $createRoute[0]['args'];
         $this->assertSame('POST', $args['methods']);
         $this->assertSame(['Obatala\Entities\Sector', 'add_sector'], $args['callback']);
+        $this->assertSame('__return_true', $args['permission_callback']);
         $this->assertArrayHasKey('sector_name', $args['args']);
+        $this->assertTrue($args['args']['sector_name']['required']);
+        $this->assertTrue($args['args']['sector_description']['required']);
+        $this->assertTrue($args['args']['sector_status']['required']);
         $this->assertArrayHasKey('sector_description', $args['args']);
         $this->assertArrayHasKey('sector_status', $args['args']);
         $this->assertTrue($args['args']['sector_name']['validate_callback']('name'));
@@ -85,6 +100,9 @@ class SectorApiTest extends TestCase
         $registeredRoutes = [];
 
         Functions\stubs([
+            'error_log' => static function (string $message) {
+                return true;
+            },
             'register_rest_route' => function (string $namespace, string $route, array $args) use (&$registeredRoutes) {
                 $registeredRoutes[] = compact('namespace', 'route', 'args');
             },
@@ -108,6 +126,9 @@ class SectorApiTest extends TestCase
         $args = $associateRoute[0]['args'];
         $this->assertSame('POST', $args['methods']);
         $this->assertSame(['Obatala\Entities\Sector', 'associate_user_to_sector'], $args['callback']);
+        $this->assertSame('__return_true', $args['permission_callback']);
+        $this->assertTrue($args['args']['user_id']['required']);
+        $this->assertTrue($args['args']['sector_id']['required']);
 
         $userIdValidator = $args['args']['user_id']['validate_callback'];
         $sectorIdValidator = $args['args']['sector_id']['validate_callback'];

@@ -5,8 +5,8 @@
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutTodoTestedCode="true"
-         failOnWarning="false"
-         failOnRisky="false">
+         failOnWarning="true"
+         failOnRisky="true">
     <testsuites>
         <testsuite name="Unit Tests">
             <directory>tests</directory>
