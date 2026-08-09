@@ -45,9 +45,8 @@ jobs:
           vendor/bin/phpunit \
             --log-junit reports/phpunit-junit.xml \
             --coverage-clover reports/phpunit-coverage.xml \
-            --coverage-html reports/phpunit-coverage-html \
-            --no-fail-on-risky \
-            --no-fail-on-warning || true
+            --coverage-html reports/phpunit-coverage-html
+
       - name: Resumo no Job Summary
         if: always()
         run: |
