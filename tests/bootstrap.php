@@ -6,6 +6,12 @@ if (!defined('ABSPATH')) {
     define('ABSPATH', __DIR__ . '/..');
 }
 
+Brain\Monkey\setUp();
+
+// Registra a limpeza após os testes
+register_shutdown_function(function () {
+    Brain\Monkey\tearDown();
+});
 
 if (!class_exists('WP_REST_Controller')) {
     class WP_REST_Controller {
