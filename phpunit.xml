@@ -6,7 +6,6 @@
          failOnWarning="false"
          failOnDeprecation="false">
     <!-- rest of your configuration -->
-</phpunit>
   <testsuites>
     <testsuite name="Unit">
       <directory>tests</directory>
