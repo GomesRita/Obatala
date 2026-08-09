@@ -52,7 +52,7 @@ jobs:
             --log-junit reports/phpunit-junit.xml \
             --coverage-clover reports/phpunit-coverage.xml \
             --coverage-html reports/phpunit-coverage-html
-            --no-coverage
+            
 
       - name: Diagnóstico — listar conteúdo de reports/
         if: always()
