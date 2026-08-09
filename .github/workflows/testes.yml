@@ -40,12 +40,22 @@ jobs:
       - name: Instalar dependências PHP
         run: composer install --prefer-dist --no-progress
 
+      - name: Criar pasta de relatórios
+        run: mkdir -p reports
+
+      - name: Criar pasta de relatórios
+        run: mkdir -p reports
+
       - name: Correr PHPUnit com relatório JUnit + cobertura
         run: |
           vendor/bin/phpunit \
             --log-junit reports/phpunit-junit.xml \
             --coverage-clover reports/phpunit-coverage.xml \
             --coverage-html reports/phpunit-coverage-html
+
+      - name: Diagnóstico — listar conteúdo de reports/
+        if: always()
+        run: ls -la reports/ || echo "pasta reports/ não existe ou está vazia"
 
       - name: Resumo no Job Summary
         if: always()
@@ -77,7 +87,7 @@ jobs:
           name: Resultados PHPUnit
           path: reports/phpunit-junit.xml
           reporter: java-junit
-          fail-on-error: false
+          fail-on-error: true
 
       - name: Comentar no PR com o resumo
         if: always() && github.event_name == 'pull_request'
