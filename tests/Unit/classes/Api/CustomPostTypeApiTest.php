@@ -9,4 +9,6 @@ class CustomPostTypeApiTest extends TestCase{
     {
         $this->assertSame('process_obatala', \Obatala\Entities\Process::get_post_type());
     }
+
+    
 }

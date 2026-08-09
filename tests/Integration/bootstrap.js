@@ -16,6 +16,7 @@ export async function getPlaygroundServer() {
       },
     ],
     blueprint: path.resolve(process.cwd(), '.playground/blueprint.json'),
+    internalCookieStore: true,
   });
 
   return { baseUrl: 'http://127.0.0.1:9400' };

@@ -1,0 +1,140 @@
+name: Testes e Relatórios
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  # ---------------------------------------------------------------
+  # PHPUnit — testes unitários puros (sem WordPress a correr)
+  # ---------------------------------------------------------------
+  php-tests:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-
+
+      - name: Instalar dependências PHP
+        run: composer install --prefer-dist --no-progress
+
+      - name: Correr PHPUnit com relatório JUnit + cobertura
+        run: |
+          vendor/bin/phpunit \
+            --log-junit reports/phpunit-junit.xml \
+            --coverage-clover reports/phpunit-coverage.xml \
+            --coverage-html reports/phpunit-coverage-html
+
+      - name: Resumo no Job Summary
+        if: always()
+        run: |
+          echo "### Resultado PHPUnit" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f reports/phpunit-junit.xml ]; then
+            php -r '
+              $x = simplexml_load_file("reports/phpunit-junit.xml");
+              $t = $x->testsuite ?? $x;
+              echo "- Testes: " . (string)$t["tests"] . "\n";
+              echo "- Falhas: " . (string)$t["failures"] . "\n";
+              echo "- Erros: " . (string)$t["errors"] . "\n";
+              echo "- Tempo: " . (string)$t["time"] . "s\n";
+            ' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Publicar artefactos PHPUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpunit-reports
+          path: reports/
+          retention-days: 30
+
+  # ---------------------------------------------------------------
+  # Vitest — testes de integração (WordPress Playground via HTTP)
+  # ---------------------------------------------------------------
+  js-tests:
+    name: Vitest (integração)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependências Node
+        run: npm ci
+
+      - name: Correr Vitest com relatório JUnit
+        run: npx vitest run --reporter=default --reporter=junit --outputFile=reports/vitest-junit.xml
+
+      - name: Publicar artefactos Vitest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-reports
+          path: reports/
+          retention-days: 30
+
+  # ---------------------------------------------------------------
+  # Relatório consolidado — junta PHPUnit + Vitest num único check/comentário
+  # ---------------------------------------------------------------
+  publish-report:
+    name: Publicar relatório consolidado
+    needs: [php-tests, js-tests]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descarregar artefactos PHPUnit
+        uses: actions/download-artifact@v4
+        with:
+          name: phpunit-reports
+          path: reports/phpunit
+
+      - name: Descarregar artefactos Vitest
+        uses: actions/download-artifact@v4
+        with:
+          name: vitest-reports
+          path: reports/vitest
+
+      - name: Publicar resultados como Check Run
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Resultados dos Testes
+          path: 'reports/phpunit/phpunit-junit.xml,reports/vitest/vitest-junit.xml'
+          reporter: java-junit
+          fail-on-error: true
+
+      - name: Comentar no PR com o resumo
+        if: github.event_name == 'pull_request'
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: |
+            reports/phpunit/phpunit-junit.xml
+            reports/vitest/vitest-junit.xml
+          comment_mode: always
