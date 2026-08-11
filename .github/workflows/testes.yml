@@ -46,7 +46,9 @@ jobs:
       - name: Correr PHPUnit com relatório JUnit + cobertura
         run: |
           vendor/bin/phpunit \
+            --configuration phpunit.xml \
             --log-junit reports/phpunit-junit.xml \
+            --display-warnings
             
 
       - name: Diagnóstico — listar conteúdo de reports/
