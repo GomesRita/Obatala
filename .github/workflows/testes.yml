@@ -47,8 +47,6 @@ jobs:
         run: |
           vendor/bin/phpunit \
             --log-junit reports/phpunit-junit.xml \
-            --coverage-clover reports/phpunit-coverage.xml \
-            --coverage-html reports/phpunit-coverage-html
             
 
       - name: Diagnóstico — listar conteúdo de reports/
